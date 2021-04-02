@@ -21,7 +21,9 @@
 	
 .data	
 SHIP: .word 0:5
-OBJECT: .word 0:3
+OBJECT1: .word 0:3
+OBJECT2: .word 0:3
+OBJECT3: .word 0:3
 
 
 .text
@@ -53,17 +55,18 @@ main:
 	li $t5, 2312
 	sw $t5, 16($t4) # Store bottom of ship into SHIP[4]
 	
+CREATE_OBJ1:	
 	# Generate random number
 	li $v0, 42
 	li $a0, 0
-	li $a1, 30 # Generate random number up until 31
+	li $a1, 10 # Generate random number up until 31
 	syscall
 	li $t1, 128
 	mult $t1, $a0
 	mflo $t1
 	addi $t1, $t1, 124 # $t1 has the position of the object start position
 	# Initialize object and draw on screen
-	la $t4, OBJECT
+	la $t4, OBJECT1
 	add $t2, $t0, $t1 # Pixel address of right position of the object
 	li $t3, PURPLE # Store color in $t3
 	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
@@ -77,8 +80,65 @@ main:
 	sw $t3, 0($t2) # Draw down pixel of object on screen
 	sub $t5, $t2, $t0
 	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+CREATE_OBJ2:
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 10
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT2
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+CREATE_OBJ3:
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 20
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT3
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
 CHECK_KEY:	
 	jal UPDATE_OBJ1
+	jal UPDATE_OBJ2
+	jal UPDATE_OBJ3
 	li $t9, 0xffff0000 
 	lw $t8, 0($t9)
 	beq $t8, 1, KEY_PRESS #If key is pressed go check which key it is
@@ -346,10 +406,14 @@ LEFT_SHIP:
 UPDATE_OBJ1:
 	li $t1, PURPLE
 	li $t7, BLACK
-	la $t2, OBJECT
+	la $t2, OBJECT1
 	
 	#Middle pixel update
 	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	li $t8, 128
+	div $t3, $t8
+	mfhi $t8
+	beq $t8, 0, CLEAR_OBJ1
 	add $t4, $t0, $t3
 	sw $t7, 0($t4) # Black out current pixel at OBJECT[1]
 	addi $t3, $t3, -4
@@ -376,6 +440,223 @@ UPDATE_OBJ1:
 	sw $t3, 0($t2) # Store new location of pixel
 	
 	jr $ra
+	
+UPDATE_OBJ2:
+	li $t1, PURPLE
+	li $t7, BLACK
+	la $t2, OBJECT2
+	
+	#Middle pixel update
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	li $t8, 128
+	div $t3, $t8
+	mfhi $t8
+	beq $t8, 0, CLEAR_OBJ2
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[1]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[1] one space to the left
+	sw $t3, 4($t2) # Store new location of pixel
+	
+	#Bottom pixel update
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[2]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[2] one space to the left
+	sw $t3, 8($t2) # Store new location of pixel
+	
+	#Bottom pixel update
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[0]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[0] one space to the left
+	sw $t3, 0($t2) # Store new location of pixel
+	
+	jr $ra
+	
+UPDATE_OBJ3:
+	li $t1, PURPLE
+	li $t7, BLACK
+	la $t2, OBJECT3
+	
+	#Middle pixel update
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	li $t8, 128
+	div $t3, $t8
+	mfhi $t8
+	beq $t8, 0, CLEAR_OBJ3
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[1]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[1] one space to the left
+	sw $t3, 4($t2) # Store new location of pixel
+	
+	#Bottom pixel update
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[2]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[2] one space to the left
+	sw $t3, 8($t2) # Store new location of pixel
+	
+	#Bottom pixel update
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel at OBJECT[0]
+	addi $t3, $t3, -4
+	add $t4, $t0, $t3
+	sw $t1, 0($t4) # Draw pixel at OBJECT[0] one space to the left
+	sw $t3, 0($t2) # Store new location of pixel
+	
+	jr $ra
+	
+	
+CLEAR_OBJ1:
+	li $t7, BLACK
+	la $t2, OBJECT1
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	j CREATE_OBJECT1
+	
+CLEAR_OBJ2:
+	li $t7, BLACK
+	la $t2, OBJECT2
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	j CREATE_OBJECT2
+	
+CLEAR_OBJ3:
+	li $t7, BLACK
+	la $t2, OBJECT3
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	j CREATE_OBJECT3
+	
+CREATE_OBJECT1:
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 10
+	syscall
+	li $t1, 128
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT1
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	j CHECK_KEY
+	
+CREATE_OBJECT2:
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 10
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT2
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	j CHECK_KEY
+	
+CREATE_OBJECT3:
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 20
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT3
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	j CHECK_KEY
 	
 	
 END:	li $v0, 10
