@@ -18,6 +18,7 @@
 .eqv	D_KEY 100
 .eqv	P_KEY 112
 .eqv	WAIT_TIME 100
+.eqv	WAIT_TIME_C 20
 	
 .data	
 SHIP: .word 0:5
@@ -139,6 +140,7 @@ CHECK_KEY:
 	jal UPDATE_OBJ1
 	jal UPDATE_OBJ2
 	jal UPDATE_OBJ3
+	jal CHECK_COLLISION
 	li $t9, 0xffff0000 
 	lw $t8, 0($t9)
 	beq $t8, 1, KEY_PRESS #If key is pressed go check which key it is
@@ -657,6 +659,145 @@ CREATE_OBJECT3:
 	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
 	
 	j CHECK_KEY
+	
+CHECK_COLLISION:
+	la $t1, SHIP
+	la $t2, OBJECT1
+	la $t3, OBJECT2
+	la $t4, OBJECT3
+	
+	# Check if ship collided with object1
+	lw $t5, 0($t1) # $t5 = SHIP[0]
+	lw $t6, 0($t2) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t2) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t2) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 4($t1) # SHIP[1]
+	lw $t6, 0($t2) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t2) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t2) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 12($t1) # SHIP[3]
+	lw $t6, 0($t2) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t2) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t2) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 16($t1) # SHIP[4]
+	lw $t6, 0($t2) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t2) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t2) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	# Check if ship collided with object2
+	lw $t5, 0($t1) # $t5 = SHIP[0]
+	lw $t6, 0($t3) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t3) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t3) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 4($t1) # SHIP[1]
+	lw $t6, 0($t3) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t3) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t3) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 12($t1) # SHIP[3]
+	lw $t6, 0($t3) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t3) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t3) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 16($t1) # SHIP[4]
+	lw $t6, 0($t3) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t3) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t3) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	# Check if ship collided with object3
+	lw $t5, 0($t1) # $t5 = SHIP[0]
+	lw $t6, 0($t4) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t4) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t4) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 4($t1) # SHIP[1]
+	lw $t6, 0($t4) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t4) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t4) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 12($t1) # SHIP[3]
+	lw $t6, 0($t4) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t4) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t4) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	lw $t5, 16($t1) # SHIP[4]
+	lw $t6, 0($t4) # $t6 = OBJECT1[0]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 4($t4) # OBJECT[1]
+	beq $t5, $t6, C_OBJ1
+	lw $t6, 8($t4) # OBJECT1[2]
+	beq $t5, $t6, C_OBJ1
+	
+	j NO_COL
+	
+C_OBJ1:
+	li $t7, RED
+	
+	# set colour of ship to red
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	li $v0, 32
+	li $a0, WAIT_TIME_C # Wait for the amount of time specified
+	syscall
+	
+NO_COL:	
+	jr $ra
+	
 	
 	
 END:	li $v0, 10
