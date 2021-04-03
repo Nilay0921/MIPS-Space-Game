@@ -17,8 +17,8 @@
 .eqv	S_KEY 115
 .eqv	D_KEY 100
 .eqv	P_KEY 112
-.eqv	WAIT_TIME 100
-.eqv	WAIT_TIME_C 20
+.eqv	WAIT_TIME 40
+.eqv	WAIT_TIME_C 50
 	
 .data	
 SHIP: .word 0:5
@@ -37,7 +37,33 @@ main:
 	li $t3, BLUE #t3 stores the blue color code
 	la $t4, SHIP # Load address of ship location to $t4 
 	
+CREATE_BOARDER:	
+	# Create top border
+	li $t5, 384
+LOOP_B:	bge $t5, 512, DISPLAY_HEALTH
+	add $t6, $t5, $t0
+	sw $t3, 0($t6)
+	addi $t5, $t5, 4
+	j LOOP_B	
 	
+DISPLAY_HEALTH:
+	# Show health
+	sw $t2, 192($t0)
+	sw $t2, 196($t0)
+	sw $t2, 200($t0)
+	sw $t2, 204($t0)
+	sw $t2, 208($t0)
+	sw $t2, 212($t0)
+	sw $t2, 216($t0)
+	sw $t2, 220($t0)
+	sw $t2, 224($t0)
+	sw $t2, 228($t0)
+	
+	li $s0, 10
+	li $s1, 192
+
+
+CREATE_BOARD:	
 	sw $t2, 2056($t0) #Top of ship green
 	sw $t1, 2180($t0) #edge of ship red
 	sw $t2, 2184($t0) #Middle of ship green
@@ -60,9 +86,10 @@ CREATE_OBJ1:
 	# Generate random number
 	li $v0, 42
 	li $a0, 0
-	li $a1, 10 # Generate random number up until 31
+	li $a1, 5 # Generate random number up until 31
 	syscall
 	li $t1, 128
+	addi $a0, $a0, 5
 	mult $t1, $a0
 	mflo $t1
 	addi $t1, $t1, 124 # $t1 has the position of the object start position
@@ -168,7 +195,7 @@ UP_SHIP:
 	
 	# Top of ship
 	lw $t5, 0($t4) # $t5 = SHIP[0] Top of ship
-	blt $t5, 128, CHECK_KEY # If current position of the top of ship is less than 128 we can't go higher
+	blt $t5, 640, CHECK_KEY # If current position of the top of ship is less than 128 we can't go higher
 	add $t6, $t0, $t5 # Adress of current pixel on board
 	sw $t7, 0($t6) # Black out current pixel at SHIP[0]
 	subi $t5, $t5, 128
@@ -578,9 +605,10 @@ CREATE_OBJECT1:
 	# Generate random number
 	li $v0, 42
 	li $a0, 0
-	li $a1, 10 # Generate random number up until 10
+	li $a1, 5 # Generate random number up until 10
 	syscall
 	li $t1, 128
+	addi $a0, $a0, 5
 	mult $t1, $a0
 	mflo $t1
 	addi $t1, $t1, 124 # $t1 has the position of the object start position
@@ -794,6 +822,12 @@ C_OBJ1:
 	li $v0, 32
 	li $a0, WAIT_TIME_C # Wait for the amount of time specified
 	syscall
+	
+	add $s3, $s1, $t0
+	sw $t7, 0($s3)
+	beq $s0, 1, END
+	addi $s1, $s1, 4
+	addi $s0, $s0, -1
 	
 NO_COL:	
 	jr $ra
