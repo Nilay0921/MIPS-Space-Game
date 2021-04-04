@@ -1173,7 +1173,63 @@ END:	jal CLEAR_SCREEN
 	sw $t2, 1952($t0)
 	sw $t2, 2080($t0)
 	
+	# 3 pixel top of N
+	sw $t2, 1316($t0)
+	sw $t2, 1320($t0)
+	sw $t2, 1324($t0)
+	
+	# Middle of N
+	sw $t2, 1452($t0)
+	sw $t2, 1580($t0)
+	sw $t2, 1708($t0)
+	sw $t2, 1836($t0)
+	sw $t2, 1964($t0)
+	sw $t2, 2092($t0)
+	
+	# 3 pixel bottom of N
+	sw $t2, 2096($t0)
+	sw $t2, 2100($t0)
+	sw $t2, 2104($t0)
+	
+	# Edge of N
+	sw $t2, 1976($t0)
+	sw $t2, 1848($t0)
+	sw $t2, 1720($t0)
+	sw $t2, 1592($t0)
+	sw $t2, 1464($t0)
+	sw $t2, 1336($t0)
+	
+	# Vertical of D
+	sw $t2, 2112($t0)
+	sw $t2, 1984($t0)
+	sw $t2, 1856($t0)
+	sw $t2, 1728($t0)
+	sw $t2, 1600($t0)
+	sw $t2, 1472($t0)
+	sw $t2, 1344($t0)
+	
+	# Diagonal of D
+	sw $t2, 1348($t0)
+	sw $t2, 1480($t0) # Top diag
+	sw $t2, 1612($t0) # Top diag
+	sw $t2, 1992($t0) # Bottom diag
+	sw $t2, 1868($t0) # Bottom diag
+	sw $t2, 2116($t0)
+	
+	# Vertical of D 2
+	sw $t2, 1740($t0)
 
+CHECK_KEY_END:
+	# Check for reset command
+	li $t9, 0xffff0000 
+	lw $t8, 0($t9)
+	beq $t8, 1, KEY_PRESS_END #If key is pressed go check which key it is
+	j CHECK_KEY_END
+
+KEY_PRESS_END:
+	lw $t2, 4($t9)
+	beq $t2, P_KEY, main
+	j CHECK_KEY_END
 
 	li $v0, 10
 	syscall
