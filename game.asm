@@ -36,6 +36,8 @@ main:
 	li $t2, GREEN #t2 stores the green color code
 	li $t3, BLUE #t3 stores the blue color code
 	la $t4, SHIP # Load address of ship location to $t4 
+	li $s4, WAIT_TIME
+	li $s5, 0
 	
 	jal CLEAR_SCREEN
 	
@@ -170,13 +172,27 @@ CHECK_KEY:
 	jal UPDATE_OBJ2
 	jal UPDATE_OBJ3
 	jal CHECK_COLLISION
+	#li $t9, 0xffff0000 
+	#lw $t8, 0($t9)
+	#beq $t8, 1, KEY_PRESS #If key is pressed go check which key it is
+	
+	addi $s5, $s5, 1
+	beq $s4, 10, NO_DEC
+	bge $s5, 10, DEC
+	j NO_DEC
+DEC:
+	addi $s4, $s4, -1
+	li $s5, 0
+NO_DEC:
+	li $v0, 32
+	add $a0, $zero, $s4
+	#li $a0, WAIT_TIME Wait for the amount of time specified
+	syscall
+	
 	li $t9, 0xffff0000 
 	lw $t8, 0($t9)
 	beq $t8, 1, KEY_PRESS #If key is pressed go check which key it is
 	
-	li $v0, 32
-	li $a0, WAIT_TIME # Wait for the amount of time specified
-	syscall
 	j CHECK_KEY
 	
 KEY_PRESS:
@@ -241,9 +257,9 @@ UP_SHIP:
 	sw $t2, 0($t6) # Draw pixel at SHIP[3] one space up
 	sw $t5, 16($t4) # Store left edge of ship address updated into SHIP[4]
 	
-	li $v0, 32
-	li $a0, WAIT_TIME # Wait for the amount of time specified
-	syscall
+	#li $v0, 32
+	#li $a0, WAIT_TIME # Wait for the amount of time specified
+	#syscall
 	
 	j CHECK_KEY
 	
@@ -301,9 +317,9 @@ DOWN_SHIP:
 	sw $t2, 0($t6) # Draw pixel at SHIP[0] one space up
 	sw $t5, 0($t4) # Store top of ship address updated into SHIP[0]
 	
-	li $v0, 32
-	li $a0, WAIT_TIME # Wait for the amount of time specified
-	syscall
+	#li $v0, 32
+	#li $a0, WAIT_TIME # Wait for the amount of time specified
+	#syscall
 	
 	j CHECK_KEY
 	
@@ -365,9 +381,9 @@ RIGHT_SHIP:
 	sw $t1, 0($t6) # Draw pixel at SHIP[1] one space up
 	sw $t5, 4($t4) # Store left edge of ship address updated into SHIP[1]
 	
-	li $v0, 32
-	li $a0, WAIT_TIME # Wait for the amount of time specified
-	syscall
+	#li $v0, 32
+	#li $a0, WAIT_TIME # Wait for the amount of time specified
+	#syscall
 	
 	j CHECK_KEY
 	
@@ -428,9 +444,9 @@ LEFT_SHIP:
 	sw $t3, 0($t6) # Draw pixel at SHIP[3] one space up
 	sw $t5, 12($t4) # Store left edge of ship address updated into SHIP[3]
 	
-	li $v0, 32
-	li $a0, WAIT_TIME # Wait for the amount of time specified
-	syscall
+	#li $v0, 32
+	#li $a0, WAIT_TIME # Wait for the amount of time specified
+	#syscall
 	
 	j CHECK_KEY
 	
