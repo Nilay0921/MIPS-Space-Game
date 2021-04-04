@@ -17,8 +17,8 @@
 .eqv	S_KEY 115
 .eqv	D_KEY 100
 .eqv	P_KEY 112
-.eqv	WAIT_TIME 40
-.eqv	WAIT_TIME_C 50
+.eqv	WAIT_TIME 100
+.eqv	WAIT_TIME_C 100
 	
 .data	
 SHIP: .word 0:5
@@ -36,6 +36,8 @@ main:
 	li $t2, GREEN #t2 stores the green color code
 	li $t3, BLUE #t3 stores the blue color code
 	la $t4, SHIP # Load address of ship location to $t4 
+	
+	jal CLEAR_SCREEN
 	
 CREATE_BOARDER:	
 	# Create top border
@@ -179,7 +181,7 @@ CHECK_KEY:
 	
 KEY_PRESS:
 	lw $t2, 4($t9)
-	beq $t2, P_KEY, END
+	beq $t2, P_KEY, main
 	beq $t2, W_KEY, UP_SHIP
 	beq $t2, S_KEY, DOWN_SHIP
 	beq $t2, D_KEY, RIGHT_SHIP
@@ -730,68 +732,68 @@ CHECK_COLLISION:
 	# Check if ship collided with object2
 	lw $t5, 0($t1) # $t5 = SHIP[0]
 	lw $t6, 0($t3) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 4($t3) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 8($t3) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	
 	lw $t5, 4($t1) # SHIP[1]
 	lw $t6, 0($t3) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 4($t3) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 8($t3) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	
 	lw $t5, 12($t1) # SHIP[3]
 	lw $t6, 0($t3) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 4($t3) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 8($t3) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	
 	lw $t5, 16($t1) # SHIP[4]
 	lw $t6, 0($t3) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 4($t3) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	lw $t6, 8($t3) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ2
 	
 	# Check if ship collided with object3
 	lw $t5, 0($t1) # $t5 = SHIP[0]
 	lw $t6, 0($t4) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 4($t4) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 8($t4) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	
 	lw $t5, 4($t1) # SHIP[1]
 	lw $t6, 0($t4) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 4($t4) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 8($t4) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	
 	lw $t5, 12($t1) # SHIP[3]
 	lw $t6, 0($t4) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 4($t4) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 8($t4) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	
 	lw $t5, 16($t1) # SHIP[4]
 	lw $t6, 0($t4) # $t6 = OBJECT1[0]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 4($t4) # OBJECT[1]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	lw $t6, 8($t4) # OBJECT1[2]
-	beq $t5, $t6, C_OBJ1
+	beq $t5, $t6, C_OBJ3
 	
 	j NO_COL
 	
@@ -829,10 +831,349 @@ C_OBJ1:
 	addi $s1, $s1, 4
 	addi $s0, $s0, -1
 	
+	# Clear object
+	li $t7, BLACK
+	la $t2, OBJECT1
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	# Create object again
+	
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 5 # Generate random number up until 10
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 5
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT1
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	# Draw ship again
+	la $t1, SHIP
+	li $t2, GREEN
+	li $t3, RED
+	li $t4, BLUE
+	
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t3, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t4, 0($t5) # Change colour to blue
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	j NO_COL
+	
+C_OBJ2:
+	li $t7, RED
+	
+	# set colour of ship to red
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	li $v0, 32
+	li $a0, WAIT_TIME_C # Wait for the amount of time specified
+	syscall
+	
+	add $s3, $s1, $t0
+	sw $t7, 0($s3)
+	beq $s0, 1, END
+	addi $s1, $s1, 4
+	addi $s0, $s0, -1
+	
+	# Clear object2
+	li $t7, BLACK
+	la $t2, OBJECT2
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	# Draw object2 again
+	
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 10
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT2
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	# Draw ship again
+	la $t1, SHIP
+	li $t2, GREEN
+	li $t3, RED
+	li $t4, BLUE
+	
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t3, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t4, 0($t5) # Change colour to blue
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	j NO_COL
+	
+C_OBJ3:
+	# make ship red
+	li $t7, RED
+	
+	# set colour of ship to red
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t7, 0($t5) # Change colour to red
+	
+	li $v0, 32
+	li $a0, WAIT_TIME_C # Wait for the amount of time specified
+	syscall
+	
+	# Update health
+	add $s3, $s1, $t0
+	sw $t7, 0($s3)
+	beq $s0, 1, END
+	addi $s1, $s1, 4
+	addi $s0, $s0, -1
+	
+	# Clear object3
+	li $t7, BLACK
+	la $t2, OBJECT3
+	
+	lw $t3, 0($t2) # $t3 = OBJECT[0]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 4($t2) # $t3 = OBJECT[1]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	lw $t3, 8($t2) # $t3 = OBJECT[2]
+	add $t4, $t0, $t3
+	sw $t7, 0($t4) # Black out current pixel
+	
+	# Re-spawn object3
+	
+	# Generate random number
+	li $v0, 42
+	li $a0, 0
+	li $a1, 10 # Generate random number up until 11-20
+	syscall
+	li $t1, 128
+	addi $a0, $a0, 20
+	mult $t1, $a0
+	mflo $t1
+	addi $t1, $t1, 124 # $t1 has the position of the object start position
+	# Initialize object and draw on screen
+	la $t4, OBJECT3
+	add $t2, $t0, $t1 # Pixel address of right position of the object
+	li $t3, PURPLE # Store color in $t3
+	sw $t3, 0($t2) # Draw rightmost pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 0($t4) # Store rightmost pixel of object into object array at OBJECT[0]
+	addi $t2, $t2, -4
+	sw $t3, 0($t2) # Draw middle pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 4($t4) # Store middle pixel of object into object array at OBJECT[1]
+	addi $t2, $t2, 128
+	sw $t3, 0($t2) # Draw down pixel of object on screen
+	sub $t5, $t2, $t0
+	sw $t5, 8($t4) # Store down pixel of object into object array at OBJECT[2]
+	
+	# Draw ship again
+	la $t1, SHIP
+	li $t2, GREEN
+	li $t3, RED
+	li $t4, BLUE
+	
+	lw $t5, 0($t1) # SHIP[0]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 4($t1) # SHIP[1]
+	add $t5, $t5, $t0
+	sw $t3, 0($t5) # Change colour to red
+	
+	lw $t5, 8($t1) # SHIP[2]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	lw $t5, 12($t1) # SHIP[3]
+	add $t5, $t5, $t0
+	sw $t4, 0($t5) # Change colour to blue
+	
+	lw $t5, 16($t1) # SHIP[4]
+	add $t5, $t5, $t0
+	sw $t2, 0($t5) # Change colour to green
+	
+	j NO_COL
+	
+	
+	
 NO_COL:	
 	jr $ra
 	
 	
+CLEAR_SCREEN:
+	li $t7, BLACK
+	li $t5, 0
+CLEAR_LOOP:
+	bgt $t5, 4092, RETURN_BACK
+	add $t6, $t5, $t0
+	sw $t7, 0($t6)
+	addi $t5, $t5, 4
+	j CLEAR_LOOP
 	
-END:	li $v0, 10
+RETURN_BACK:
+	jr $ra
+	
+	
+	
+END:	jal CLEAR_SCREEN
+	
+	# Display game over text
+	li $t2, RED
+	
+	# Vertical part of E
+	sw $t2, 1292($t0)
+	sw $t2, 1420($t0)
+	sw $t2, 1548($t0)
+	sw $t2, 1676($t0)
+	sw $t2, 1804($t0)
+	sw $t2, 1932($t0)
+	sw $t2, 2060($t0)
+	#First line of E
+	sw $t2, 1296($t0)
+	sw $t2, 1300($t0)
+	sw $t2, 1304($t0)
+	# Second line of E
+	sw $t2, 1680($t0)
+	sw $t2, 1684($t0)
+	sw $t2, 1688($t0)
+	# Last ime of E
+	sw $t2, 2064($t0)
+	sw $t2, 2068($t0)
+	sw $t2, 2072($t0)
+	
+	# First vertical of N
+	sw $t2, 1312($t0)
+	sw $t2, 1440($t0)
+	sw $t2, 1568($t0)
+	sw $t2, 1696($t0)
+	sw $t2, 1824($t0)
+	sw $t2, 1952($t0)
+	sw $t2, 2080($t0)
+	
+
+
+	li $v0, 10
 	syscall
